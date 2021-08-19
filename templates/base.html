@@ -6,14 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    <title>Document</title>
+    <link href="../static/css/pricing.css" rel="stylesheet">
 </head>
 <body>
-    {{ session['log_in'] }}
-    <p></p>
-    username : {{ session['username'] }}
-    <p></p>
-    <a href='/logout'>click logout</a>
-    <h1>base.html</h1>
+    {% for book in books_info %}
+          <div>
+            <img src="{{ url_for('static', filename='img/book_img/'+book.id|string+'.png') }}"> </img>
+            <div class="card-body">
+              <h6 class="card-title pricing-card-title">{{book.book_name}}</h6>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
 </body>
 </html>

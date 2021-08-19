@@ -1,0 +1,44 @@
+html {
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* .container {
+  max-width: 960px;
+} */
+
+.pricing-header {
+  max-width: 700px;
+}
+
+.card-deck .card {
+  min-width: 220px;
+}
+
+.border-top { border-top: 1px solid #e5e5e5; }
+.border-bottom { border-bottom: 1px solid #e5e5e5; }
+
+.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+
+/* .card-header{
+  height: 200px;
+} */
+.card-header > img{
+    width: 150px !important;
+    height: 200px !important; 
+    object-fit: cover;
+}
+
+.card-body{
+  height: 220px;
+}
+.card-body button{
+  position: absolute;
+  width: 85%;
+  bottom: 20px;
+
+}
