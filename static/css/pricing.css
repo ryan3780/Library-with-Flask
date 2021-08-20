@@ -42,3 +42,53 @@ html {
   bottom: 20px;
 
 }
+
+.book_info{
+  display: flex;
+  margin-top: 100px;
+}
+.book_info > img{
+  width: 300px;
+  margin-right: 200px;
+}
+.column_body{
+  display: flex;
+  height: fit-content;
+  margin-top: 22px;
+  border: 2px black solid;
+}
+.column{
+  padding: 0 20px;
+  margin: 10px 10px;
+  border-right: 2px solid;
+}
+.column > h6{
+  margin-bottom: 1.75rem;
+}
+.column > h6:last-child{
+  margin-bottom: 0;
+}
+
+.column_value{
+  padding: 0 10px;
+  margin: 10px 10px;
+}
+.column_value > h6{
+  margin-bottom: 1.75rem;
+}
+.column_value > h6:last-child{
+  margin-bottom: 0;
+}
+
+.book_intro{
+  border: 2px solid;
+}
+
+.book_description{
+  padding: 30px 30px 10px 30px;
+  word-break: keep-all;
+}
+
+.book_review{
+  border-top: 2px solid;
+}

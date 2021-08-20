@@ -20,13 +20,17 @@ from models import *
 def hello():
 	
 	if 'log_in' in session:
-		return render_template('main.html')
+		books_info = Books.query.all()
+		return render_template('main.html', books_info = books_info)
 	else:
 		return render_template('login.html')
 
 @app.route("/login", methods=['POST'])
 def login():
-	
+
+	if 'log_in' in session:
+		return hello()
+
 	if request.method == 'POST':
 		username = request.form['username']
 		password = request.form['password']
@@ -36,10 +40,9 @@ def login():
 			session['log_in'] = True
 			session['username'] = username
 			books_info = Books.query.all()
-			# 출력이 원래 int 값만 나오나요??
-			print(books_info)
 			db.session.close()
-			return render_template('main.html', books_info = books_info)
+			# redirect -> '/' url history 찾아보기(출력 해보기)
+			return redirect(url_for('hello'))
 			
 		return '''<script>alert('nonono'); location.href= '/';</script>'''
 
@@ -66,7 +69,7 @@ def register():
 
 	return 	render_template('register.html')
 
-@app.route("/book-info/<bookId>")
+@app.route("/book-info/<int:bookId>")
 def info(bookId):
 	books_info = Books.query.filter(Books.id == bookId).all()
 	print(books_info)

@@ -23,7 +23,14 @@ class Books(db.Model):
     publisher = db.Column(db.Text(), nullable=False)
     author = db.Column(db.String(20), nullable=False)
     publication_date = db.Column(db.Date, nullable=False)
-    pages = db.Column(db.Integer, primary_key=False)
+    pages = db.Column(db.Integer, nullable=False)
     isbn = db.Column(db.String(30), nullable=False)
     description = db.Column(db.Text(), nullable=False)
     link = db.Column(db.Text(), nullable=False)
+    stock = db.Column(db.Integer, nullable=False)
+
+# class rent book~~~
+# 책 정보, 유저 정보
+# 언제 빌렸는지, 언제 반납했는지
+# fk 책이랑 유저
+# sqlarchemy relationship 
