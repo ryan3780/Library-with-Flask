@@ -1,6 +1,7 @@
-from flask import Flask, render_template, session, request, url_for, redirect
+from flask import Flask, render_template, session, request, url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from datetime import date, timedelta
 
 app = Flask(__name__)
 
@@ -39,7 +40,6 @@ def login():
 		if data is not None :
 			session['log_in'] = True
 			session['username'] = username
-			books_info = Books.query.all()
 			db.session.close()
 			# redirect -> '/' url history 찾아보기(출력 해보기)
 			return redirect(url_for('hello'))
@@ -74,6 +74,30 @@ def info(bookId):
 	books_info = Books.query.filter(Books.id == bookId).all()
 	print(books_info)
 	return render_template('base.html', books_info=books_info)
+
+
+@app.route("/rent-book/<int:bookId>")
+def rent(bookId):
+	customer= Users.query.filter_by(username =session['username']).first()
+	query = Rent_book(bookId, customer.id, date.today().isoformat(), (date.today() + timedelta(days=14)).isoformat())
+
+	# 밑에 명령어는 2개는 왜 에러가 발생하나요?
+	# book_query = Books.query.filter(Books.id == bookId).update({'stock' : Books.stock - 1})
+	# book_query = Books.query.filter_by(id = bookId).update({'stock' : Books.stock - 1})
+	book_query = Books.query.filter_by(id = bookId).first()
+	if book_query.stock > 0:
+		book_query.stock -= 1
+		# print(book_query)
+		db.session.add(query)
+		db.session.add(book_query)
+		db.session.commit()
+		db.session.close()
+	else:
+		flash('재고가 없습니다.')
+		# return redirect(url_for('hello'))
+	# redirect를 안하고, 대여하기 버튼을 누르면 책의 재고 수량만 바뀌고, 새로고침을 안하는 방법이 있나요? 리액트처럼 바뀐부분만 랜더링 하는...
+	return redirect(url_for('hello'))
+
 
 if __name__ == "__main__":
 
