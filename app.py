@@ -21,7 +21,7 @@ from models import *
 def hello():
 	
 	if 'log_in' in session:
-		books_info = Books.query.all()
+		books_info = Book.query.all()
 		return render_template('main.html', books_info = books_info)
 	else:
 		return render_template('login.html')
@@ -30,12 +30,12 @@ def hello():
 def login():
 
 	if 'log_in' in session:
-		return hello()
+		return redirect(url_for('main.html'))
 
 	if request.method == 'POST':
 		username = request.form['username']
 		password = request.form['password']
-		data = Users.query.filter_by(username =username, password =password).first()
+		data = User.query.filter_by(username =username, password =password).first()
 		
 		if data is not None :
 			session['log_in'] = True
@@ -59,7 +59,7 @@ def register():
 		email = request.form['email']
 		password = request.form['password']
 		check = request.form['check']
-		query = Users(username, email, password)
+		query = User(username, email, password)
 
 		if password == check and len(username) != 0 and len(email) != 0 and len(password) != 0:	
 			db.session.add(query)
@@ -71,20 +71,19 @@ def register():
 
 @app.route("/book-info/<int:bookId>")
 def info(bookId):
-	books_info = Books.query.filter(Books.id == bookId).all()
-	print(books_info)
-	return render_template('base.html', books_info=books_info)
+	books_info = Book.query.filter(Book.id == bookId).all()
+	return render_template('book_info.html', books_info=books_info)
 
 
 @app.route("/rent-book/<int:bookId>")
 def rent(bookId):
-	customer= Users.query.filter_by(username =session['username']).first()
-	query = Rent_book(bookId, customer.id, date.today().isoformat(), (date.today() + timedelta(days=14)).isoformat())
+	customer= User.query.filter_by(username =session['username']).first()
+	query = RentBook(bookId, customer.id, date.today().isoformat(), (date.today() + timedelta(days=14)).isoformat())
 
 	# 밑에 명령어는 2개는 왜 에러가 발생하나요?
 	# book_query = Books.query.filter(Books.id == bookId).update({'stock' : Books.stock - 1})
 	# book_query = Books.query.filter_by(id = bookId).update({'stock' : Books.stock - 1})
-	book_query = Books.query.filter_by(id = bookId).first()
+	book_query = Book.query.filter_by(id = bookId).first()
 	if book_query.stock > 0:
 		book_query.stock -= 1
 		# print(book_query)
@@ -98,6 +97,25 @@ def rent(bookId):
 	# redirect를 안하고, 대여하기 버튼을 누르면 책의 재고 수량만 바뀌고, 새로고침을 안하는 방법이 있나요? 리액트처럼 바뀐부분만 랜더링 하는...
 	return redirect(url_for('hello'))
 
+
+@app.route("/rent-log")
+def rent_log():
+	
+	if 'log_in' in session:
+		customer= User.query.filter_by(username = session['username']).first()
+		rent_log = RentBook.query.filter(customer.id == RentBook.customer_id).all()
+		rented_book = []
+		date = []
+
+		for i in rent_log:
+			rented_book.append(Book.query.filter(Book.id == i.book_id).all())
+			date.append([i.rent_date, i.return_date])
+
+		rented_book = sum(rented_book, [])
+		print(date)
+		return render_template('rental_log.html', books_info = rented_book, date=date)
+	# else:
+	# 	return render_template('login.html')
 
 if __name__ == "__main__":
 

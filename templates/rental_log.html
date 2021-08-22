@@ -25,21 +25,15 @@
                 <div class="star-ratings-base space-x-2 text-lg">
                   <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                 </div>
-              </div></li>
-              <li>{{book.stock}}권 남음</li>
+              </div>
+            </li>
+            <li>{{date[loop.index - 1][0]}}</li>
+            <li>{{date[loop.index - 1][1]}}</li>
             </ul>
-            <a class="p-2 text-dark" href="/rent-book/{{book.id}}"><button type="button" class="btn btn-lg btn-block btn-outline-primary">대여하기</button></a>
           </div>
         </div>
         {% endfor %}
       </div>
-      {%with messages = get_flashed_messages()%}
-  {%if messages %}
-    <script type="text/javascript">
-      alert("{{messages[-1]}}");
-    </script>
-    {%endif%}
-  {%endwith%}
 
 
     <!-- Bootstrap core JavaScript

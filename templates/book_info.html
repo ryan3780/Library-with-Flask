@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% for book in books_info %}
+          <div class="book_info">
+            <img src="{{ url_for('static', filename='img/book_img/'+book.id|string+'.png') }}"  class="w-25"/>
+            <div class="column_body w-50">
+
+              <div class="column w-25">
+                <h6 class="card-title pricing-card-title">책이름</h6>
+                <h6 class="card-title pricing-card-title">출판사</h6>
+                <h6 class="card-title pricing-card-title">저자</h6>
+                <h6 class="card-title pricing-card-title">출간일</h6>
+                <h6 class="card-title pricing-card-title">페이지 수</h6>
+                <h6 class="card-title pricing-card-title">ISBN 코드</h6>
+              </div>
+              <div class="column_value">
+                <h6 class="card-title pricing-card-title">{{book.book_name}}</h6>
+                <h6 class="card-title pricing-card-title">{{book.publisher}}</h6>
+                <h6 class="card-title pricing-card-title">{{book.author}}</h6>
+                <h6 class="card-title pricing-card-title">{{book.publication_date}}</h6>
+                <h6 class="card-title pricing-card-title">{{book.pages}}쪽</h6>
+                <h6 class="card-title pricing-card-title">{{book.isbn}}</h6>
+              </div>
+
+            </div>
+          </div>
+        {% endfor %}
+        <div>
+          <h3>책 소개</h3>
+        </div>
+        <div class="book_intro">
+          <div class="book_description">
+            {% for book in books_info %}
+              {{book.description}}
+            {% endfor %}
+            
+          </div>
+          <div style="margin-top: 50px; padding: 0 0 10px 10px;">
+            댓글
+          </div>
+          <div class="book_review">
+           작성자 div
+           댓글 달기 input
+           평가하기 별(hover) + 작성하기 버튼
+          </div>
+        </div>
+{% endblock %}
