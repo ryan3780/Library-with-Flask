@@ -106,16 +106,57 @@ def rent_log():
 		rent_log = RentBook.query.filter(customer.id == RentBook.customer_id).all()
 		rented_book = []
 		date = []
+		img = []
+		
+		for i in rent_log:
+			rented_book.append(Book.query.filter(Book.id == i.book_id).all())
+			date.append([i.rent_date, i.return_date])
+
+		rented_book = sum(rented_book, [])
+
+		for i in rented_book:
+			img.append(i.id)
+		# print(img, rented_book)
+		return render_template('rental_log.html', books_info = rented_book, date=date, img=img)
+
+
+@app.route("/checkin")
+def checkin():
+	
+	if 'log_in' in session:
+		customer= User.query.filter_by(username = session['username']).first()
+		rent_log = RentBook.query.filter(customer.id == RentBook.customer_id).all()
+		rented_book = []
+		date = []
+		img = []
 
 		for i in rent_log:
 			rented_book.append(Book.query.filter(Book.id == i.book_id).all())
 			date.append([i.rent_date, i.return_date])
 
 		rented_book = sum(rented_book, [])
-		print(date)
-		return render_template('rental_log.html', books_info = rented_book, date=date)
-	# else:
-	# 	return render_template('login.html')
+
+		for i in rented_book:
+			img.append(i.id)
+	
+		return render_template('checkin.html', books_info = rented_book, date=date, img=img)
+
+
+@app.route("/checkin-book/<int:bookId>")
+def checkin_book(bookId):
+	customer= User.query.filter_by(username = session['username']).first()
+	return_book = RentBook.query.filter(RentBook.customer_id == customer.id, RentBook.book_id == bookId).order_by(RentBook.id.desc()).first()
+	db.session.delete(return_book)
+	db.session.commit()
+	db.session.close()
+
+	book_query = Book.query.filter_by(id = bookId).first()
+	book_query.stock += 1
+	db.session.add(book_query)
+	db.session.commit()
+	db.session.close()
+
+	return redirect(url_for('checkin'))
 
 if __name__ == "__main__":
 

@@ -28,8 +28,9 @@
               </div>
             </li>
             <li>{{date[loop.index - 1][0]}}</li>
-            <li>{{date[loop.index - 1][1]}}</li>
+            <!-- <li>{{date[loop.index - 1][1]}}</li> -->
             </ul>
+            <a class="p-2 text-dark" href="/checkin-book/{{book.id}}"><button type="button" class="btn btn-lg btn-block btn-outline-primary">반납하기</button></a>
           </div>
         </div>
         {% endfor %}
