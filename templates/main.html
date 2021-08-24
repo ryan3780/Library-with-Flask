@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-      {{ session['log_in'] }}
       <p></p>
       username : {{ session['username'] }}
       <p></p>
@@ -15,7 +14,11 @@
           </div>
           <div class="card-body">
             <h6 class="card-title pricing-card-title"><a class="p-2 text-blue" href="/book-info/{{book.id}}">{{book.book_name}}</a></h6>
-            <ul class="list-unstyled mt-3 mb-4">
+            <ul class="list-unstyled mt-3 mb-4" style="
+            position: absolute;
+            bottom: 15%;
+            left: 25%;
+        ">
               <li><div class="star-ratings">
                 <div 
                   class="star-ratings-fill space-x-2 text-lg"
@@ -26,7 +29,7 @@
                   <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                 </div>
               </div></li>
-              <li>{{book.stock}}권 남음</li>
+              <li style="margin-left: 26px;">{{book.stock}}권 남음</li>
             </ul>
             <a class="p-2 text-dark" href="/rent-book/{{book.id}}"><button type="button" class="btn btn-lg btn-block btn-outline-primary">대여하기</button></a>
           </div>

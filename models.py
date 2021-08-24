@@ -44,16 +44,28 @@ class RentBook(db.Model):
     book_id = db.Column(db.Integer, db.ForeignKey('BOOK.id'))
     customer_id = db.Column(db.Integer, db.ForeignKey('CUSTOMER.id'))
     rent_date = db.Column(db.Date, nullable=False)
+    return_date = db.Column(db.Date, nullable=True)
+
+
+    def __init__(self, book_id, customer_id, rent_date):
+        self.book_id = book_id
+        self.customer_id = customer_id
+        self.rent_date = rent_date
+
+class CheckInBook(db.Model):
+    __tablename__ = 'CHECK_IN_BOOK'
+
+    id = db.Column(db.Integer, primary_key=True)
+    book_id = db.Column(db.Integer, db.ForeignKey('BOOK.id'))
+    customer_id = db.Column(db.Integer, db.ForeignKey('CUSTOMER.id'))
+    rent_date = db.Column(db.Date, nullable=False)
     return_date = db.Column(db.Date, nullable=False)
 
-    def __init__(self, book_id, customer_id, rent_date,return_date ):
+
+    def __init__(self, book_id, customer_id, rent_date, return_date):
         self.book_id = book_id
         self.customer_id = customer_id
         self.rent_date = rent_date
         self.return_date = return_date
 
-# class rent book~~~
-# 책 정보, 유저 정보
-# 언제 빌렸는지, 언제 반납했는지
-# fk 책이랑 유저
-# sqlarchemy relationship 
+        

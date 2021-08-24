@@ -24,18 +24,19 @@ from models import *
 
 @app.route("/")
 def hello():
-	
+	form = RegisterForm()
 	if 'log_in' in session:
 		books_info = Book.query.all()
 		return render_template('main.html', books_info = books_info)
 	else:
-		return render_template('login.html')
+		return render_template('login.html', form= form)
 
 @app.route("/login", methods=['POST'])
 def login():
+	form = RegisterForm()
 
 	if 'log_in' in session:
-		return redirect(url_for('main.html'))
+		return redirect(url_for('main.html', form = form))
 
 	if request.method == 'POST':
 		email = request.form['email']
@@ -47,9 +48,10 @@ def login():
 			session['username'] = email
 			db.session.close()
 			# redirect -> '/' url history 찾아보기(출력 해보기)
-			return redirect(url_for('hello'))
-			
-		return '''<script>alert('nonono'); location.href= '/';</script>'''
+			return redirect(url_for('hello', form= form))
+
+		flash('이메일과 비밀번호를 다시 입력해주세요.')	
+		return redirect(url_for('hello', form= form))
 
 @app.route("/logout")
 def logout():
@@ -69,18 +71,19 @@ def register():
 
 		username_validation = re.compile('^[가-힣a-zA-Z]+$')
 		email_validatioin = re.compile('^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
-		# 최소 10자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수 문자 :
-		pw_validation = re.compile('^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{10,}$')
-		# 최소 8 자, 하나 이상의 문자, 하나의 숫자, 하나의 특수 문자 :
-		pw_validation2 = re.compile('^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^\w\s]).*{8,}')
+		# 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수 문자
+		pw_validation = re.compile('^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$')
+		# 최소 8 자, 하나 이상의 문자, 하나의 숫자, 하나의 특수 문자
+		# pw_validation = re.compile('^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^\w\s]).*{8,}$ | ^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{10,}$')
 		# print(bool(username_validation.match(username)), bool(email_validatioin.match(email)), bool(pw_validation.match(password)))
-
-		if bool(username_validation.match(username)) and bool(email_validatioin.match(email)) and bool(pw_validation.match(password) or bool(pw_validation2.match(password))):
+		
+		if bool(username_validation.match(username)) and bool(email_validatioin.match(email)) and bool(pw_validation.match(password)):
 			db.session.add(query)
 			db.session.commit()
 			db.session.close()
-			return render_template('login.html')
-
+			flash('가입을 정상적으로 완료했습니다.')
+			return render_template('login.html', form = form)
+	
 	return 	render_template('register.html', form = form)
 
 @app.route("/book-info/<int:bookId>")
@@ -89,18 +92,19 @@ def info(bookId):
 	return render_template('book_info.html', books_info=books_info)
 
 
-@app.route("/rent-book/<int:bookId>")
+@app.route("/rent-book/<int:bookId>") 
+# ajax or main_page와 같은 주소로 처리 or 자바스크립트로 스크롤 위치 값 local storage로 저장해놨다가 불러와서 적용하기, '#' url 주소 뒤에 붙이는 방법 id 사용
 def rent(bookId):
 	customer= User.query.filter_by(email = session['username']).first()
 	print(customer)
-	query = RentBook(bookId, customer.id, date.today().isoformat(), (date.today() + timedelta(days=14)).isoformat())
+	query = RentBook(bookId, customer.id, date.today().isoformat())
 
 	# 밑에 명령어는 2개는 왜 에러가 발생하나요?
 	# book_query = Books.query.filter(Books.id == bookId).update({'stock' : Books.stock - 1})
 	# book_query = Books.query.filter_by(id = bookId).update({'stock' : Books.stock - 1})
 	book_query = Book.query.filter_by(id = bookId).first()
 	check_duplicattion = RentBook.query.filter(customer.id == RentBook.customer_id, RentBook.book_id == bookId).all()
-	print(check_duplicattion)
+
 	if book_query.stock > 0:
 		if not check_duplicattion:
 			book_query.stock -= 1
@@ -124,7 +128,7 @@ def rent_log():
 	
 	if 'log_in' in session:
 		customer= User.query.filter_by(email = session['username']).first()
-		rent_log = RentBook.query.filter(customer.id == RentBook.customer_id).all()
+		rent_log = CheckInBook.query.filter(customer.id == CheckInBook.customer_id).all()
 		rented_book = []
 		date = []
 		img = []
@@ -167,6 +171,9 @@ def checkin():
 def checkin_book(bookId):
 	customer= User.query.filter_by(email = session['username']).first()
 	return_book = RentBook.query.filter(RentBook.customer_id == customer.id, RentBook.book_id == bookId).order_by(RentBook.id.desc()).first()
+	left_log = CheckInBook(bookId, customer.id, return_book.rent_date, date.today().isoformat())
+	# print(left_log)
+	db.session.add(left_log)
 	db.session.delete(return_book)
 	db.session.commit()
 	db.session.close()
