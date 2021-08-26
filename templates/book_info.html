@@ -26,7 +26,7 @@
           </div>
         {% endfor %}
         <div>
-          <h3>책 소개</h3>
+          <h4>책 소개</h4>
         </div>
         <div class="book_intro">
           <div class="book_description">
@@ -35,13 +35,56 @@
             {% endfor %}
             
           </div>
-          <div style="margin-top: 50px; padding: 0 0 10px 10px;">
-            댓글
+          <div style="margin-top: 20px; padding: 0 0 10px 10px;">
+            <h5>댓글</h5>
           </div>
-          <div class="book_review">
-           작성자 div
-           댓글 달기 input
-           평가하기 별(hover) + 작성하기 버튼
+          <div class="book_review p-3">
+            {% for comment in comments %}
+            <div class='col-12 border border-dark mb-3'>
+              <h3>{{comment[0]}}</h3>
+              <div class='col-12 d-flex justify-content-between'>
+                <h3>{{comment[1]}}</h3>
+                <div class="star-ratings">
+                  <div 
+                    class="star-ratings-fill space-x-2 text-lg"
+                    style="width:{{comment[2] * 20}}%">
+                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                  </div>
+                  <div class="star-ratings-base space-x-2 text-lg">
+                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            <form action="/comment/{{books_info[0].id}}" method="post">
+              <div class="form-group">
+                {{form.content(class="form-control", placeholder="댓글달기")}}
+            </div>
+            <div class="rating d-flex justify-content-end">
+              <!-- 해당 별점을 클릭하면 해당 별과 그 왼쪽의 모든 별의 체크박스에 checked 적용 -->
+              <input type="checkbox" name="rating" id="rating1" value="1" class="rate_radio" title="1점">
+              <label for="rating1"></label>
+              <input type="checkbox" name="rating" id="rating2" value="2" class="rate_radio" title="2점">
+              <label for="rating2"></label>
+              <input type="checkbox" name="rating" id="rating3" value="3" class="rate_radio" title="3점" >
+              <label for="rating3"></label>
+              <input type="checkbox" name="rating" id="rating4" value="4" class="rate_radio" title="4점">
+              <label for="rating4"></label>
+              <input type="checkbox" name="rating" id="rating5" value="5" class="rate_radio" title="5점">
+              <label for="rating5"></label>
+              <input class='ml-4 btn btn-outline-primary' type="submit" value="댓글달기">
+          </div>
+              
+              <input id="total" type="hidden" name="total" data-rate='0'/>
+          </form>
           </div>
         </div>
+        {%with messages = get_flashed_messages()%}
+        {%if messages %}
+          <script type="text/javascript">
+            alert("{{messages[-1]}}");
+          </script>
+          {%endif%}
+        {%endwith%}
 {% endblock %}

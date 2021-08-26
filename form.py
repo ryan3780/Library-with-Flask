@@ -8,3 +8,7 @@ class RegisterForm(FlaskForm):
     email = StringField('email', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired(), EqualTo('password_2')])
     password_2 = PasswordField('repassword', validators=[DataRequired()])
+
+
+class CommentForm(FlaskForm):
+    content = StringField('comment', validators=[DataRequired()])

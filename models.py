@@ -3,14 +3,13 @@ from sqlalchemy.orm import relationship
 
 class User(db.Model):
     
-    __tablename__ = 'CUSTOMER'
+    __tablename__ = 'customer'
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), unique=True, nullable=False)
     email = db.Column(db.String(30), unique=True, nullable=False)
-    password = db.Column(db.String(20), nullable=False)
-    children = relationship("RentBook")
-
+    password = db.Column(db.String(50), nullable=False)
+    
     # __init__을 쓰면 다른 곳에서 인스턴스에 인자값을 넘길 수 있다
     def __init__(self, username, email, password ):
         self.username = username
@@ -18,7 +17,7 @@ class User(db.Model):
         self.password = password
 
 class Book(db.Model):
-    __tablename__ = 'BOOK'
+    __tablename__ = 'book'
 
     id = db.Column(db.Integer, primary_key=True)
     book_name = db.Column(db.Text(), nullable=False)
@@ -31,21 +30,19 @@ class Book(db.Model):
     link = db.Column(db.Text(), nullable=False)
     stock = db.Column(db.Integer, nullable=False)
     rate = db.Column(db.Integer, nullable=False)
-    children = relationship("RentBook")
 
     def __init__(self, stock, rate):
         self.stock = stock
         self.rate = rate
     
 class RentBook(db.Model):
-    __tablename__ = 'RENTAL_BOOK'
+    __tablename__ = 'rental_book'
 
     id = db.Column(db.Integer, primary_key=True)
-    book_id = db.Column(db.Integer, db.ForeignKey('BOOK.id'))
-    customer_id = db.Column(db.Integer, db.ForeignKey('CUSTOMER.id'))
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     rent_date = db.Column(db.Date, nullable=False)
     return_date = db.Column(db.Date, nullable=True)
-
 
     def __init__(self, book_id, customer_id, rent_date):
         self.book_id = book_id
@@ -53,14 +50,13 @@ class RentBook(db.Model):
         self.rent_date = rent_date
 
 class CheckInBook(db.Model):
-    __tablename__ = 'CHECK_IN_BOOK'
+    __tablename__ = 'check_in_book'
 
     id = db.Column(db.Integer, primary_key=True)
-    book_id = db.Column(db.Integer, db.ForeignKey('BOOK.id'))
-    customer_id = db.Column(db.Integer, db.ForeignKey('CUSTOMER.id'))
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     rent_date = db.Column(db.Date, nullable=False)
     return_date = db.Column(db.Date, nullable=False)
-
 
     def __init__(self, book_id, customer_id, rent_date, return_date):
         self.book_id = book_id
@@ -68,4 +64,19 @@ class CheckInBook(db.Model):
         self.rent_date = rent_date
         self.return_date = return_date
 
-        
+
+class Comment(db.Model):
+
+    __tablename__ = 'comment'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
+    content = db.Column(db.Text)
+    rate = db.Column(db.Integer)     
+
+    def __init__(self, book_id, customer_id, content, rate):
+        self.book_id = book_id
+        self.customer_id = customer_id
+        self.content = content
+        self.rate = rate

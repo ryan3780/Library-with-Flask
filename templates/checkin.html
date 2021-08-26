@@ -1,22 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-      {{ session['log_in'] }}
-      <p></p>
-      username : {{ session['username'] }}
-      <p></p>
-    </div>
 
-      <div class="card-deck mb-3 text-center">
+    <div class="row justify-content-md-center">
+      <div class="row mb-3 text-center">
         {% for book in books_info %}
-        <div class="card mb-4 box-shadow">
+        <div class="card  mr-md-3 mb-4 box-shadow" style="
+        width: 16.5rem;
+    ">
           <div class="card-header" >
             <img src="{{ url_for('static', filename='img/book_img/'+img[loop.index - 1]|string+'.png') }}"> </img>
           </div>
           <div class="card-body">
             <h6 class="card-title pricing-card-title"><a class="p-2 text-blue" href="/book-info/{{book.id}}">{{book.book_name}}</a></h6>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li><div class="star-ratings">
+            <ul class="list-unstyled mt-3 mb-4" style="
+            position: absolute;
+            bottom: 15%;
+            left: 36%;
+        ">
+              <li><div class="star-ratings"style="
+                margin-left: 0;
+            ">
                 <div 
                   class="star-ratings-fill space-x-2 text-lg"
                   style="width:{{book.rate * 20}}%">
@@ -35,7 +38,7 @@
         </div>
         {% endfor %}
       </div>
-
+    </div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

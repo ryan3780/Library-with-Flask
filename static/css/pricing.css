@@ -15,10 +15,6 @@ html {
   max-width: 700px;
 }
 
-.card-deck .card {
-  min-width: 220px;
-}
-
 .border-top { border-top: 1px solid #e5e5e5; }
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
 
@@ -29,9 +25,9 @@ html {
 } */
 
 .card-header > img{
-    width: 150px !important;
-    height: 200px !important; 
-    object-fit: cover;
+  width: 100px !important;
+  height: 140px !important;
+  object-fit: cover;
 }
 
 .card-body{
@@ -46,11 +42,14 @@ html {
 
 .book_info{
   display: flex;
-  margin-top: 100px;
+  margin-top: 25px;
+  margin-bottom: 20px;
+  align-items: center;
 }
 .book_info > img{
   width: 300px;
-  margin-right: 200px;
+  margin-left: 100px;
+  margin-right: 150px;
 }
 .column_body{
   display: flex;
@@ -63,9 +62,7 @@ html {
   margin: 10px 10px;
   border-right: 2px solid;
 }
-.column > h6{
-  margin-bottom: 1.75rem;
-}
+
 .column > h6:last-child{
   margin-bottom: 0;
 }
@@ -74,9 +71,7 @@ html {
   padding: 0 10px;
   margin: 10px 10px;
 }
-.column_value > h6{
-  margin-bottom: 1.75rem;
-}
+
 .column_value > h6:last-child{
   margin-bottom: 0;
 }
@@ -120,4 +115,33 @@ html {
 .star-ratings-base {
   z-index: 0;
   padding: 0;
+}
+
+.rating .rate_radio {
+  position: relative;
+  display: inline-block;
+  z-index: 20;
+  opacity: 0.001;
+  width: 60px;
+  height: 60px;
+  background-color: #fff;
+  cursor: pointer;
+  vertical-align: top;
+  display: none;
+}
+.rating .rate_radio + label {
+  position: relative;
+  display: inline-block;
+  margin-left: -4px;
+  z-index: 10;
+  width: 30px;
+  height: 30px;
+  background-image: url('../img/starrate.png');
+  background-repeat: no-repeat;
+  background-size: 30px 30px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+}
+.rating .rate_radio:checked + label {
+  background-color: #ff8;
 }
