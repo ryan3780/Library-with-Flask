@@ -252,7 +252,7 @@ def comment(bookId):
 
 			db.session.add(book_rate)
 			db.session.commit()
-			# db.session.close()
+			db.session.close()
 		else:
 			flash('별점 입력해주세요')
 			return redirect(url_for('detail', bookId=bookId))
