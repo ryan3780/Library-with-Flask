@@ -81,6 +81,13 @@ def register():
 		# email_validatioin = re.compile('^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 		# 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수 문자
 		# pw_validation = re.compile('^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$')
+		usernames = '^[가-힣|a-z|A-Z]+$'
+		n = re.compile(usernames)
+		is_username = n.search(username)
+
+		if is_username == None:
+			flash('이름은 한글과 영문만 가능합니다.')
+			return render_template('register.html', form = form)
 
 		if len(password) < 8:
 			flash('password는 8자 이상이여야합니다.')
