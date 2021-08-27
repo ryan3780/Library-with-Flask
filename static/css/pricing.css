@@ -143,5 +143,5 @@ html {
   background-color: #f0f0f0;
 }
 .rating .rate_radio:checked + label {
-  background-color: #ff8;
+  background-color: purple;
 }
