@@ -6,7 +6,7 @@ from flask_wtf.csrf import CSRFProtect #csrf
 from form import RegisterForm, CommentForm
 import bcrypt
 import math
-import json
+import re
 
 app = Flask(__name__)
 
@@ -76,7 +76,7 @@ def register():
 		username = form.data.get('username')
 		email = form.data.get('email')
 		password = form.data.get('password')
-
+		repassword = form.data.get('password_2')
 		# username_validation = re.compile('^[가-힣a-zA-Z]+$')
 		# email_validatioin = re.compile('^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 		# 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수 문자
@@ -86,19 +86,32 @@ def register():
 			flash('password는 8자 이상이여야합니다.')
 			return render_template('register.html', form = form)
 
-		if not any(char.isdigit() for char in password):
+		numbers = '\d'
+		m = re.compile(numbers)
+		is_number = m.search(password)
+	
+		if is_number == None:
+			
 			flash('숫자가 포함되어야합니다.')
 			return render_template('register.html', form = form)
 
-		special_char = '`~!@#$%^&*()_+|\\}{[]":;\'?><,./'
-		if not any(char in special_char for char in password):
+		specials = '\W'
+		w = re.compile(specials)
+		is_special = w.search(password)
+
+		if is_special == None:
+
 			flash('특수문자가 포함되어야합니다.')
 			return render_template('register.html', form = form)
 		
+		if password != repassword:
+			flash('비밀번호가 일치하지 않습니다.')
+			return render_template('register.html', form = form)
+
 		user = User.query.filter_by(email=email).first()
 		if user:
 			flash('이미 존재하는 유저입니다.')
-			return render_template('signup.html')
+			return render_template('register.html', form = form)
 		
 		password = (bcrypt.hashpw(password.encode('UTF-8'), bcrypt.gensalt())).decode('utf-8')
 		query = User(username, email, password)
