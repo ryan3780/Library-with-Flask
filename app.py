@@ -35,13 +35,13 @@ def hello():
 	else:
 		return render_template('login.html', form= form)
 
-@app.route("/login",  methods=['GET', 'POST'])
+@app.route("/login",  methods=['POST'])
 def login():
 	form = RegisterForm()
 
 	if 'log_in' in session:
 		db.session.close()
-		return redirect(url_for('main.html', form = form))
+		return redirect(url_for('hello'))
 
 	if request.method == 'POST':
 		email = request.form['email']
@@ -57,10 +57,10 @@ def login():
 			session['username'] = data.username
 			db.session.close()
 
-			return redirect(url_for('hello', form= form))
+			return redirect(url_for('hello'))
 
 		flash('이메일과 비밀번호를 다시 입력해주세요.')	
-		return redirect(url_for('hello', form= form))
+		return redirect(url_for('hello'))
 
 @app.route("/logout")
 def logout():
