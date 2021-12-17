@@ -13,6 +13,8 @@ Library-with-Flask/     # root
 ```
 ## 스택
 ### AWS EC2 + Nginx + Gunicorn + Flask + MySQL  
+<br /> 
+  
 ## 구현 기능
 - 로그인/로그아웃, 회원가입
 - 책 대여/반납
