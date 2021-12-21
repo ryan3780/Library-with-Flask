@@ -11,7 +11,8 @@ import re
 app = Flask(__name__)
 
 app.secret_key = 'sample_secret_key'
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://{.env}@localhost:3306/books_db" 
+# .env 
+app.config["SQLALCHEMY_DATABASE_URI"] = ".env" 
 app.config['SQLALCHEMY_POOL_SIZE'] = 1
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
